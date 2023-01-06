@@ -32,6 +32,16 @@ und im Textfeld folgende Zeile einfügen. Der Python Pfad muss mit dem Output vo
 */30 * * * * /usr/bin/python3 /home/jacknjo/TibberLox/tibberlox.py
 ```
 
+### Benutzung in Loxone
+Im Repository ist die `VUI_tibberlox.xml` hinterlegt. Diese beinhaltet alle Werte, die vom Skript gesendet werden. Der Großteil der Werte entspricht der API-Beschreibung von: https://loxwiki.atlassian.net/wiki/spaces/LOX/pages/1522696197/Anbinden+der+aWATTar+hourly+API
+
+Die folgenden Elemente wurden zusätzlich hinzugefügt:
+- `date_now_seconds_since_epoch` Kann als Trigger/Zeitstempel verwendet werden.
+- `price_stdev` Standardabweichung der Preise des aktuellen Tages
+- `data_price_hour_rel_num_negatives` Anzahl der validen negativen Relativwerte (invalide Werte tragen den wert -1000).
+- `data_price_hour_rel_num_positives` Anzahl der validen positiven Relativwerte (invalide Werte tragen den wert -1000).
+
+
 ### Manuelle Benutzung
 
 ``` bash
@@ -95,3 +105,14 @@ chmod +x tibberlox.py
 # To read the help.
 ./tibberlox.py -h
 ```
+
+
+### Usage in Loxone
+
+In the repository you find the file `VUI_tibberlox.xml`. This contains the library definition of all values sent by the script. This is mainly as documented in https://loxwiki.atlassian.net/wiki/spaces/LOX/pages/1522696197/Anbinden+der+aWATTar+hourly+API.
+
+The following elements were added in addition:
+- `date_now_seconds_since_epoch` Can be used as trigger for new data.
+- `price_stdev` Standard deviation of the prices from the current day.
+- `data_price_hour_rel_num_negatives` Number of valid negative relative values (invalid values carry value -1000).
+- `data_price_hour_rel_num_positives` Number of valid positive relative values (invalid values carry value -1000).
