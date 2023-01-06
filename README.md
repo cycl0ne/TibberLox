@@ -38,8 +38,8 @@ Im Repository ist die `VUI_tibberlox.xml` hinterlegt. Diese beinhaltet alle Wert
 Die folgenden Elemente wurden zusätzlich hinzugefügt:
 - `date_now_seconds_since_epoch` Kann als Trigger/Zeitstempel verwendet werden.
 - `price_stdev` Standardabweichung der Preise des aktuellen Tages
-- `data_price_hour_rel_num_negatives` Anzahl der validen negativen Relativwerte (invalide Werte tragen den wert -1000).
-- `data_price_hour_rel_num_positives` Anzahl der validen positiven Relativwerte (invalide Werte tragen den wert -1000).
+- `data_price_hour_rel_num_negatives` Anzahl der validen negativen Relativwerte (invalide Werte tragen den Wert -1000).
+- `data_price_hour_rel_num_positives` Anzahl der validen positiven Relativwerte (invalide Werte tragen den Wert -1000).
 
 
 ### Manuelle Benutzung
