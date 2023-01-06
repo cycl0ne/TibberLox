@@ -144,12 +144,21 @@ def get_price_dictionary(tibber_account, home_id):
         for i in range(36):
             price_information[f"data_price_hour_rel_{i:02}_amount"] = invalid_state_value
 
+    number_of_valid_negative_relatives = 0
+    number_of_valid_positive_relatives = 0
     for i, price_info in enumerate(price_information_available):
         isoformat = datetime.datetime.fromisoformat(price_info.starts_at).replace(tzinfo=None)
         delta_hour = math.ceil((isoformat - now).total_seconds()/3600)
         sign = '-' if delta_hour < 0 else ''
+        if delta_hour < 0:
+            number_of_valid_negative_relatives += 1
+        else:
+            number_of_valid_positive_relatives += 1
+
         price_information[f"data_price_hour_rel_{sign}{abs(delta_hour):02}_amount"] = price_info.total
 
+    price_information["data_price_hour_rel_num_negatives"] = number_of_valid_negative_relatives
+    price_information["data_price_hour_rel_num_positives"] = number_of_valid_positive_relatives
     return price_information
 
 
