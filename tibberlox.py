@@ -31,23 +31,33 @@ def load_or_create_json_config(file_name):
 
     logging.info(f"Loading credentials from: {file_name}")
     destination_not_reachable = True
-    while destination_not_reachable:
-        destination_ip = input("Please enter your destination IP or hostname of the (Miniserver):\n > ")
-        error, output = subprocess.getstatusoutput("ping -c 1 -w 1 " + destination_ip)
-        if error:
-            logging.error(output)
-        else:
-            destination_not_reachable = False
+    max_port_number = 2**16-1
 
-    destination_port_invalid = True
-    while destination_port_invalid:
-        destination_port = input("Please enter your destination port (Miniserver):\n > ")
-        max_port = 2**16-1
+    while destination_not_reachable:
+        destination_ips = input("Please enter your destination IPs or hostnames of the (Miniserver) in a comma seperated list with the port appended seperated by ':'.\n  e.g. 192.168.168.10:55555, 192.168.168.99:34633\n\n > ")
+        destination_ip_port_tuples = [s.strip() for s in destination_ips.split(',')]
+        if len(destination_ip_port_tuples) < 1: continue
+
+        destinations = []
+        all_ips_valid = True
         try:
-            destination_port = int(destination_port)
-            if destination_port > max_port:
-                raise ValueError(f"The given port {destination_port} is not in the valid range [1-{max_port}].")
-            destination_port_invalid = False
+            for ip_port in destination_ip_port_tuples:
+                ip, port = ip_port.split(':')
+                error, output = subprocess.getstatusoutput("ping -c 1 -w 1 " + ip)
+                if error:
+                    logging.error(output)
+                    all_ips_valid = False
+                    break
+
+                port = int(port)
+                if port > max_port_number or port < 1:
+                    raise ValueError(f"The given port {port} is not in the valid range [1-{max_port_number}].")
+
+                destinations.append({"ip": ip, "port": port})
+
+            if all_ips_valid:
+                destination_not_reachable = False
+
         except Exception as e:
             logging.error(e)
 
@@ -75,12 +85,8 @@ def load_or_create_json_config(file_name):
         except Exception as e:
             logging.error(e)
 
-    destination = {}
-    destination["ip"] = destination_ip
-    destination["port"] = destination_port
-
     config = {}
-    config["destination"] = destination
+    config["destinations"] = destinations
 
     config["token"] = token
     config["home_id"] = home_id
@@ -185,14 +191,16 @@ def send_to_destination(config, key_value_dictionary):
     string_to_be_sent_formatted = prepare_datagram_string(key_value_dictionary, format=True)
 
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    destination = (config["destination"]["ip"], config["destination"]["port"])
-    bytes_sent = s.sendto(string_to_be_sent.encode(), destination)
+    string_to_be_sent_encoded = string_to_be_sent.encode()
+    for destination in config["destinations"]:
+        dst = (destination["ip"], destination["port"])
+        bytes_sent = s.sendto(string_to_be_sent_encoded, dst)
 
-    if bytes_sent < len(string_to_be_sent):
-        logging.error("Failed to send the information to " + destination)
-    else:
-        logging.info(f"Sent {bytes_sent} bytes to {destination}")
-        logging.debug(f"Sent the following string:\n" + string_to_be_sent_formatted)
+        if bytes_sent < len(string_to_be_sent):
+            logging.error("Failed to send the information to " + dst)
+        else:
+            logging.info(f"Sent {bytes_sent} bytes to {dst}")
+            logging.debug(f"Sent the following string:\n" + string_to_be_sent_formatted)
 
 
 if __name__ == '__main__':
