@@ -179,6 +179,7 @@ def prepare_datagram_string(key_value_dictionary, format=False):
     s = s.replace('"', '')
     return s
 
+
 def send_to_destination(config, key_value_dictionary):
     string_to_be_sent = prepare_datagram_string(key_value_dictionary)
     string_to_be_sent_formatted = prepare_datagram_string(key_value_dictionary, format=True)
