@@ -32,10 +32,15 @@ und im Textfeld folgende Zeile einfügen. Der Python Pfad muss mit dem Output vo
 */30 * * * * /usr/bin/python3 /home/jacknjo/TibberLox/tibberlox.py
 ```
 
-### Konfiguration
-Das Script fragt beim ersten Start nach den Konfigurationsparametern, die für den Zugang zur Tibber-API notwendig sind. Ebenso müssen IP und Port der Zieladresse angegeben werden. Die Informationen werden unter Zugangscode `0400` schreibgeschützt und nur für den Nutzer lesbar auf dem Dateisystem parallel zum `tibberlox.py` Skript unter dem Namen `.tibber_credentials` abgelegt.
+### Benutzung in Loxone
+Im Repository ist die `VUI_tibberlox.xml` hinterlegt. Diese beinhaltet alle Werte, die vom Skript gesendet werden. Der Großteil der Werte entspricht der API-Beschreibung von: https://loxwiki.atlassian.net/wiki/spaces/LOX/pages/1522696197/Anbinden+der+aWATTar+hourly+API
 
-Die Datei `.tibber_credentials` kann auch manuell von `demo_tibber_credentials` kopiert, modifiziert und unter dem Namen `.tibber_credentials` abgelegt werden. Damit kann der Konfigurationsschritt umgangen werden.
+Die folgenden Elemente wurden zusätzlich hinzugefügt:
+- `date_now_seconds_since_epoch` Kann als Trigger/Zeitstempel verwendet werden.
+- `price_stdev` Standardabweichung der Preise des aktuellen Tages
+- `data_price_hour_rel_num_negatives` Anzahl der validen negativen Relativwerte (invalide Werte tragen den Wert -1000).
+- `data_price_hour_rel_num_positives` Anzahl der validen positiven Relativwerte (invalide Werte tragen den Wert -1000).
+
 
 ### Manuelle Benutzung
 
@@ -52,16 +57,6 @@ chmod +x tibberlox.py
 # Alternativ für die Hilfe.
 ./tibberlox.py -h
 ```
-
-### Benutzung in Loxone
-Im Repository ist die `VUI_tibberlox.xml` hinterlegt. Diese beinhaltet alle Werte, die vom Skript gesendet werden. Der Großteil der Werte entspricht der API-Beschreibung von: https://loxwiki.atlassian.net/wiki/spaces/LOX/pages/1522696197/Anbinden+der+aWATTar+hourly+API
-
-Die folgenden Elemente wurden zusätzlich hinzugefügt:
-- `date_now_seconds_since_epoch` Kann als Trigger/Zeitstempel verwendet werden.
-- `price_stdev` Standardabweichung der Preise des aktuellen Tages
-- `data_price_hour_rel_num_negatives` Anzahl der validen negativen Relativwerte (invalide Werte tragen den Wert -1000).
-- `data_price_hour_rel_num_positives` Anzahl der validen positiven Relativwerte (invalide Werte tragen den Wert -1000).
-
 
 ## English
 This is a small helper script that reads the tibber API and forwards the information read to a remote destination. This can be used for a Loxone Miniserver, as the functionality to receive information via `graphql`-API is not given natively. The UDP datagram contains one big packed package with the information as specified here: https://loxwiki.atlassian.net/wiki/spaces/LOX/pages/1522696197/Anbinden+der+aWATTar+hourly+API.
@@ -95,12 +90,6 @@ In the promt add the following line. Attention! The python path must match the o
 */30 * * * * /usr/bin/python3 /home/jacknjo/TibberLox/tibberlox.py
 ```
 
-### Configuration
-At first invocation the script prompts for configuration parameters necessary for the runtime. These include the Tibber-API Token as the destination ip and port touple(s). Those settings will be saved in a file called `.tibber_credentials` parallel to the `tibberlox.py`-script with access modifier `0400` in a write protected manner and only readable to the user.
-
-If you want to skip the configuration process, just copy the `demo_tibber_credentials` modify the fields as desired and write it to `.tibber_credentials` next to the `tibberlox.py` script. As long as this script exists and is readable, the prompt will not show up.
-
-
 ### Manual Usage
 
 ``` bash
@@ -116,6 +105,7 @@ chmod +x tibberlox.py
 # To read the help.
 ./tibberlox.py -h
 ```
+
 
 ### Usage in Loxone
 
