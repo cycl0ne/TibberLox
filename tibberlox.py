@@ -6,31 +6,23 @@
 # Version 1.0: Initial GITHUB Release
 #
 
+import os
 import sys
 import socket
 import tibber
 import time
 import statistics
 import datetime
+import argparse
+import json
 from datetime import date
 
 # Konfiguration/Configuration
 #
-
 ACCESS_TOKEN = "5K4MVS-OjfWhK_4yrjOlFe1F6kJXPVf7eQYggo8ebAE"   # Tibber ACCESS Token (DEFAULT = DEMO TOKEN!)
 msip= "192.168.1.5"             # IP Adress Loxone Mini Server
 msport = 5005                   # Port the Mini Server is listening to
-
-# Helper Functions
-#
-# Logger() - Send a Timestamp to a Log
-#
-def logger(data):
-    filename = "cronlog_14h.txt"
-    f = open(filename, 'a')
-    time = datetime.datetime.now()
-    f.write("Run at: {}\n".format(time))
-    f.close()   
+homes = 0                       # HOMES
 
 #
 # SendUDP() - Helper Function for the UDP Transfer
@@ -93,10 +85,9 @@ def sendudp2ms():
             sendudp("data_price_hour_rel_{}_amount: {}" .format(str(i).zfill(2), price_data[hour+i].total))
         i = i + 1
 
-#
-# Main() - Function 
-#
 
-account = tibber.Account(ACCESS_TOKEN)
-home = account.homes[0]
-sendudp2ms()
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    account = tibber.Account(ACCESS_TOKEN)
+    home = account.homes[homes]
+    sendudp2ms()

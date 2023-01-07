@@ -51,9 +51,6 @@ chmod +x tibberlox.py
 # Ausführung mit default-Parametern.
 ./tibberlox.py
 
-# Oder für mehr/weniger logging-Informationen.
-./tibberlox.py -l DEBUG
-
 # Alternativ für die Hilfe.
 ./tibberlox.py -h
 ```
@@ -98,9 +95,6 @@ chmod +x tibberlox.py
 
 # Run with default options.
 ./tibberlox.py
-
-# For more/less verbosity.
-./tibberlox.py -l DEBUG
 
 # To read the help.
 ./tibberlox.py -h
