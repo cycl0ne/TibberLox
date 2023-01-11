@@ -5,6 +5,7 @@
 #
 # Version 1.0: Initial GITHUB Release
 # Version 1.1: Fix empty list, clean udp, main added
+# Version 1.2: Relative extended to 24h
 #
 # Todo: Config Files + Dirs/Php scripts for Loxberry Plugin
 #
@@ -26,6 +27,7 @@ ACCESS_TOKEN = "5K4MVS-OjfWhK_4yrjOlFe1F6kJXPVf7eQYggo8ebAE"   # Tibber ACCESS T
 msip= "192.168.1.5"             # IP Adress Loxone Mini Server
 msport = 5005                   # Port the Mini Server is listening to
 homes = 0                       # Tibber Home (mostly 0)
+PRICEEMPTY = 100                # Send this, if no price is available
 
 # udp functions
 #
@@ -37,6 +39,7 @@ def closeudp(connection):
     connection.close()
 
 def sendudp(connection, data):
+    print(data)
     res = connection.sendto(data.encode(), (msip, msport))
     if res != data.encode().__len__():
         print("Sent bytes do not match - expected {0} : got {1}".format(data.__len__(), res))
@@ -86,9 +89,12 @@ def sendudp2ms():
     price_tomorrow = home.current_subscription.price_info.tomorrow
     i = 0
 
-    while i < 8:
+    while i < 24:
         if hour + i > 23 :
-            sendudp(con, "data_price_hour_rel_{}_amount: {}" .format(str(i).zfill(2), price_tomorrow[hour+i-24].total))
+            if len(price_tomorrow)> 0:
+                sendudp(con, "data_price_hour_rel_{}_amount: {}" .format(str(i).zfill(2), price_tomorrow[hour+i-24].total))
+            else:
+                sendudp(con, "data_price_hour_rel_{}_amount: {}" .format(str(i).zfill(2), PRICEEMPTY))
         else:
             sendudp(con, "data_price_hour_rel_{}_amount: {}" .format(str(i).zfill(2), price_data[hour+i].total))
         i = i + 1
