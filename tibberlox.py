@@ -39,7 +39,6 @@ def closeudp(connection):
     connection.close()
 
 def sendudp(connection, data):
-    print(data)
     res = connection.sendto(data.encode(), (msip, msport))
     if res != data.encode().__len__():
         print("Sent bytes do not match - expected {0} : got {1}".format(data.__len__(), res))
